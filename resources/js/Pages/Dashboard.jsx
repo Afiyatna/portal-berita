@@ -20,13 +20,13 @@ export default function Dashboard(props) {
         setCategory('')
     }
 
-    useEffect(() => {
-        if (!props.myNews) {
-            Inertia.get('/news')
-            // console.log('ini api', props)
-        }
-        return;
-    }, [])
+    // useEffect(() => {
+    //     if (!props.myNews) {
+    //         Inertia.get('/news')
+    //         // console.log('ini api', props)
+    //     }
+    //     return;
+    // }, [])
 
     return (
         <AuthenticatedLayout
