@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Link, Head } from '@inertiajs/react';
+import { Link, Head, router } from '@inertiajs/react';
 import { Inertia } from '@inertiajs/inertia';
 
 export default function Dashboard(props) {

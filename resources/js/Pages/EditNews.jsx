@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Head } from '@inertiajs/react';
+import { Head, router } from '@inertiajs/react';
 import Navbar from '@/Components/Navbar';
 import { Inertia } from '@inertiajs/inertia';
 
