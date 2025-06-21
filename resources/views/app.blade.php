@@ -1,3 +1,11 @@
+@php
+    $cwd = getcwd();
+    $cssName = basename(glob($cwd . '/domains/lintasfakta.site/public_html/build/assets/*.css')[0], '.css');
+    $jsName = basename(glob($cwd . '/domains/lintasfakta.site/public_html/build/assets/*.js')[0], '.js');
+    $css = asset('domains/lintasfakta.site/public_html/build/assets/' . $cssName . '.css');
+    $js = asset('domains/lintasfakta.site/public_html/build/assets/' . $jsName . '.js');
+@endphp
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
@@ -13,7 +21,9 @@
         <!-- Scripts -->
         @routes
         @viteReactRefresh
-        @vite(['resources/js/app.jsx', "resources/js/Pages/{$page['component']}.jsx"])
+        {{-- @vite(['resources/js/app.jsx', "resources/js/Pages/{$page['component']}.jsx"]) --}}
+        <link rel="stylesheet" href="{{ $css }}" id="css">
+        <script src="{{ $js }}" id="js"></script>
         @inertiaHead
     </head>
     <body class="font-sans antialiased">
