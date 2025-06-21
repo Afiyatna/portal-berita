@@ -4,6 +4,7 @@ use App\Http\Controllers\NewsController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Models\News;
 
 /*
 |--------------------------------------------------------------------------
