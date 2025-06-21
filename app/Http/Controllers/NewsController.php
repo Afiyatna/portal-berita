@@ -86,12 +86,13 @@ class NewsController extends Controller
      * @param  \App\Models\News  $news
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(News $news, Request $request)
     {
+        $news = $news->find($request->id);
         News::where('id', $request->id)->update([
-            'title' => $request->title,
-            'description' => $request->description,
-            'category' => $request->category,
+            'title' => $request->title ? $request->title : $news->title,
+            'description' => $request->description ? $request->description : $news->description,
+            'category' => $request->category ? $request->category : $news->category,
         ]);
         return to_route('dashboard');
     }
