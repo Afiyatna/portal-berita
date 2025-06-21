@@ -13,7 +13,7 @@ export default function Dashboard(props) {
         const data = {
             title, description, category
         }
-        Inertia.post('/news', data)
+        router.post('/news', data)
         setIsNotif(true)
         setTitle('')
         setDescription('')

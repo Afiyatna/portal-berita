@@ -12,7 +12,7 @@ export default function EditNews(props) {
         const data = {
             id:props.myNews.id, title, description, category
         }
-        Inertia.post('/news/update', data)
+        router.post('/news/update', data)
         setTitle('')
         setDescription('')
         setCategory('')
