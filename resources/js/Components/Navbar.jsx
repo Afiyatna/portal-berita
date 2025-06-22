@@ -4,9 +4,9 @@ const Navbar = ({ user }) => {
     return (
         <div className="navbar bg-base-100">
           <div className="flex-1">
-            <a className="btn btn-ghost normal-case text-xl">CobraNews</a>
+            <a className="btn btn-ghost normal-case text-xl">LintasFaka</a>
           </div>
-        <div className="flex-none gap-2">
+        <div className="flex items-center justify-end space-x-2">
             <div className="form-control">
               <input type="text" placeholder="Search" className="input input-bordered" />
             </div>
