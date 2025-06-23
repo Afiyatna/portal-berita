@@ -72,10 +72,10 @@ class NewsController extends Controller
      * @param  \App\Models\News  $news
      * @return \Illuminate\Http\Response
      */
-    public function edit(News $news, Request $request)
+    public function edit(News $news)
     {
         return Inertia::render('EditNews', [
-            'myNews' => $news->find($request->id)
+            'news' => $news
         ]);
     }
 
@@ -86,15 +86,17 @@ class NewsController extends Controller
      * @param  \App\Models\News  $news
      * @return \Illuminate\Http\Response
      */
-    public function update(News $news, Request $request)
+    public function update(Request $request, News $news)
     {
-        $news = $news->find($request->id);
-        News::where('id', $request->id)->update([
-            'title' => $request->title ? $request->title : $news->title,
-            'description' => $request->description ? $request->description : $news->description,
-            'category' => $request->category ? $request->category : $news->category,
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'category' => 'required|string|max:255',
         ]);
-        return to_route('dashboard');
+
+        $news->update($request->all());
+        
+        return to_route('dashboard')->with('message', 'Berita berhasil diperbarui!');
     }
 
     /**
@@ -108,5 +110,18 @@ class NewsController extends Controller
         $news = news::find($request->id);
         $news->delete();
         return redirect()->back()->with('message', 'berita berhasil dihapus');
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\News  $news
+     * @return \Inertia\Response
+     */
+    public function showNewsDetail(News $news)
+    {
+        return Inertia::render('News/Show', [
+            'news' => $news,
+        ]);
     }
 }
