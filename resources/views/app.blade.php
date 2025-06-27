@@ -26,7 +26,7 @@
         @viteReactRefresh
         
         {{-- nyalakan kode ini untuk melakukan perubahan dalam kodingan --}}
-        <!-- @vite(['resources/js/app.jsx', "resources/js/Pages/{$page['component']}.jsx"]) -->
+        {{-- @vite(['resources/js/app.jsx', "resources/js/Pages/{$page['component']}.jsx"]) --}}
         
         {{-- nyalakan kode ini untuk mendeploy --}}
         <link rel="stylesheet" href="{{ $css }}" id="css">

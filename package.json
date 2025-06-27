@@ -22,6 +22,9 @@
     },
     "dependencies": {
         "@inertiajs/inertia": "^0.11.1",
-        "daisyui": "^5.0.35"
+        "@tailwindcss/typography": "^0.5.16",
+        "@tinymce/tinymce-react": "^6.2.1",
+        "daisyui": "^5.0.35",
+        "react-quill": "^2.0.0"
     }
 }

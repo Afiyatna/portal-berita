@@ -1,29 +1,46 @@
 import React, { useState } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, router } from '@inertiajs/react';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 export default function Dashboard(props) {
     const [showModal, setShowModal] = useState(false);
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [category, setCategory] = useState('');
+    const [publishedAt, setPublishedAt] = useState('');
+    const [image, setImage] = useState(null);
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const data = { title, description, category };
-        router.post(route('create.news'), data, {
+        
+        const formData = new FormData();
+        formData.append('title', title);
+        formData.append('description', description);
+        formData.append('category', category);
+        formData.append('published_at', publishedAt);
+        if (image) {
+            formData.append('image', image);
+        }
+
+        router.post(route('create.news'), formData, {
             onSuccess: () => {
                 setShowModal(false);
                 setTitle('');
                 setDescription('');
                 setCategory('');
+                setPublishedAt('');
+                setImage(null);
             },
         });
     };
 
     const deleteNews = (id) => {
         if (confirm('Are you sure you want to delete this news?')) {
-            router.post(route('delete.news'), { id });
+            router.delete(route('delete.news'), {
+                data: { id },
+            });
         }
     };
 
@@ -64,6 +81,7 @@ export default function Dashboard(props) {
                                         <tr>
                                             <th className="text-left py-3 px-4 uppercase font-semibold text-sm">Title</th>
                                             <th className="text-left py-3 px-4 uppercase font-semibold text-sm">Category</th>
+                                            <th className="text-left py-3 px-4 uppercase font-semibold text-sm">Published</th>
                                             <th className="text-left py-3 px-4 uppercase font-semibold text-sm">Actions</th>
                                         </tr>
                                     </thead>
@@ -76,6 +94,9 @@ export default function Dashboard(props) {
                                                         <span className="bg-blue-200 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full">
                                                             {news.category}
                                                         </span>
+                                                    </td>
+                                                    <td className="py-3 px-4 text-sm text-gray-600">
+                                                        {news.published_at ? new Date(news.published_at).toLocaleDateString() : 'Not set'}
                                                     </td>
                                                     <td className="py-3 px-4 flex space-x-2">
                                                         <Link
@@ -95,7 +116,7 @@ export default function Dashboard(props) {
                                             ))
                                         ) : (
                                             <tr>
-                                                <td colSpan="3" className="py-4 px-4 text-center text-gray-500">
+                                                <td colSpan="4" className="py-4 px-4 text-center text-gray-500">
                                                     You haven't created any news yet.
                                                 </td>
                                             </tr>
@@ -111,7 +132,7 @@ export default function Dashboard(props) {
             {/* Create News Modal */}
             {showModal && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div className="bg-white p-8 rounded-lg shadow-2xl w-full max-w-2xl">
+                    <div className="bg-white p-8 rounded-lg shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
                         <h2 className="text-2xl font-bold mb-6">Create a New Article</h2>
                         <form onSubmit={handleSubmit}>
                             <div className="mb-4">
@@ -136,15 +157,35 @@ export default function Dashboard(props) {
                                     required
                                 />
                             </div>
+                            <div className="mb-4">
+                                <label htmlFor="published_at" className="block text-gray-700 text-sm font-bold mb-2">Publish Date & Time</label>
+                                <input
+                                    type="datetime-local"
+                                    id="published_at"
+                                    value={publishedAt}
+                                    onChange={(e) => setPublishedAt(e.target.value)}
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label htmlFor="image" className="block text-gray-700 text-sm font-bold mb-2">Article Image</label>
+                                <input
+                                    type="file"
+                                    id="image"
+                                    onChange={(e) => setImage(e.target.files[0])}
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    accept="image/*"
+                                />
+                                <p className="text-xs text-gray-500 mt-1">Accepted formats: JPEG, PNG, JPG, GIF (max 2MB)</p>
+                            </div>
                             <div className="mb-6">
                                 <label htmlFor="description" className="block text-gray-700 text-sm font-bold mb-2">Description</label>
-                                <textarea
-                                    id="description"
+                                <ReactQuill
                                     value={description}
-                                    onChange={(e) => setDescription(e.target.value)}
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-32"
-                                    required
-                                ></textarea>
+                                    onChange={setDescription}
+                                    theme="snow"
+                                    style={{ height: '200px', marginBottom: '40px' }}
+                                />
                             </div>
                             <div className="flex items-center justify-end space-x-4">
                                 <button

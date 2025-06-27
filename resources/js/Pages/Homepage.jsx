@@ -22,7 +22,11 @@ export default function Homepage(props) {
                     {/* Main News */}
                     {mainNews && (
                         <div className="lg:col-span-2 bg-gray-100 rounded-lg overflow-hidden shadow-lg">
-                             <img src={`https://picsum.photos/seed/${mainNews.id}/800/600`} alt={mainNews.title} className="w-full h-96 object-cover"/>
+                             <img 
+                                src={mainNews.image ? `/${mainNews.image}` : `https://picsum.photos/seed/${mainNews.id}/800/600`} 
+                                alt={mainNews.title} 
+                                className="w-full h-96 object-cover"
+                            />
                             <div className="p-6">
                                 <Link href={`/news/${mainNews.id}`} className="hover:text-red-600 transition-colors duration-300">
                                     <h1 className="text-4xl font-bold leading-tight mb-4">{mainNews.title}</h1>
@@ -31,7 +35,7 @@ export default function Homepage(props) {
                                 <div className="text-sm text-gray-500">
                                     <span>By {mainNews.author}</span>
                                     <span className="mx-2">•</span>
-                                    <span>{new Date().toLocaleDateString()}</span>
+                                    <span>{mainNews.published_at ? new Date(mainNews.published_at).toLocaleDateString() : new Date().toLocaleDateString()}</span>
                                 </div>
                             </div>
                         </div>
@@ -42,7 +46,11 @@ export default function Homepage(props) {
                         <h2 className="text-2xl font-bold border-b-4 border-red-500 pb-2">Recent News</h2>
                         {recentNews.map((item) => (
                              <div key={item.id} className="flex items-start space-x-4 p-2 rounded-lg hover:bg-gray-100 transition-colors duration-300 group">
-                                <img src={`https://picsum.photos/seed/${item.id}/150/150`} alt={item.title} className="w-24 h-24 object-cover rounded-md"/>
+                                <img 
+                                    src={item.image ? `/${item.image}` : `https://picsum.photos/seed/${item.id}/150/150`} 
+                                    alt={item.title} 
+                                    className="w-24 h-24 object-cover rounded-md"
+                                />
                                 <div>
                                     <span className="text-xs bg-red-500 text-white font-semibold px-2 py-1 rounded-full uppercase">{item.category}</span>
                                     <Link href={`/news/${item.id}`} className="mt-2 block font-semibold text-lg leading-tight group-hover:text-red-600">{item.title}</Link>
@@ -59,7 +67,11 @@ export default function Homepage(props) {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {topStories.map((story) => (
                             <div key={story.id} className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 group">
-                                 <img src={`https://picsum.photos/seed/${story.id}/600/400`} alt={story.title} className="w-full h-56 object-cover"/>
+                                 <img 
+                                    src={story.image ? `/${story.image}` : `https://picsum.photos/seed/${story.id}/600/400`} 
+                                    alt={story.title} 
+                                    className="w-full h-56 object-cover"
+                                />
                                 <div className="p-6">
                                     <span className="text-xs bg-blue-500 text-white font-semibold px-2 py-1 rounded-full uppercase">{story.category}</span>
                                     <Link href={`/news/${story.id}`}>
@@ -68,6 +80,8 @@ export default function Homepage(props) {
                                     <p className="mt-2 text-gray-600">{story.description.substring(0, 100)}...</p>
                                      <div className="text-sm text-gray-500 mt-4">
                                         <span>By {story.author}</span>
+                                        <span className="mx-2">•</span>
+                                        <span>{story.published_at ? new Date(story.published_at).toLocaleDateString() : new Date().toLocaleDateString()}</span>
                                     </div>
                                 </div>
                             </div>

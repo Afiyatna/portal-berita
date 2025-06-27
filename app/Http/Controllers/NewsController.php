@@ -42,13 +42,30 @@ class NewsController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'category' => 'required|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
         $news = new News();
         $news->title = $request->title;
         $news->description = $request->description;
         $news->category = $request->category;
         $news->author = auth()->user()->email;
+        $news->published_at = $request->published_at ? $request->published_at : now();
+
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('images/news'), $imageName);
+            $news->image = 'images/news/' . $imageName;
+        }
+
         $news->save();
-        return redirect()->back()->with('message', 'berita berhasil dibuat'); 
+        return redirect()->back()->with('message', 'Berita berhasil dibuat'); 
     }
 
     /**
@@ -92,9 +109,26 @@ class NewsController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'category' => 'required|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $news->update($request->all());
+        $data = $request->only(['title', 'description', 'category']);
+        $data['published_at'] = $request->published_at ? $request->published_at : now();
+
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($news->image && file_exists(public_path($news->image))) {
+                unlink(public_path($news->image));
+            }
+            
+            $image = $request->file('image');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('images/news'), $imageName);
+            $data['image'] = 'images/news/' . $imageName;
+        }
+
+        $news->update($data);
         
         return to_route('dashboard')->with('message', 'Berita berhasil diperbarui!');
     }
@@ -107,9 +141,11 @@ class NewsController extends Controller
      */
     public function destroy(Request $request)
     {
-        $news = news::find($request->id);
-        $news->delete();
-        return redirect()->back()->with('message', 'berita berhasil dihapus');
+        $news = News::find($request->id);
+        if ($news) {
+            $news->delete();
+        }
+        return to_route('dashboard')->with('message', 'berita berhasil dihapus');
     }
 
     /**
